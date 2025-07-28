@@ -1,0 +1,55 @@
+# Laravel specific
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.env
+.env.backup
+.env.production
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+
+# IDE
+/.idea
+/.vscode
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Docker & Database files
+/docker-compose/mysql/
+/docker-compose/redis/
+*.log
+
+# Build files
+/public/build
+/public/mix-manifest.json
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Cache
+/bootstrap/cache/*.php
+/storage/app/public/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/testing/*
+/storage/framework/views/*
+/storage/logs/*
+
+# Testing
+coverage/
+.phpunit.cache
