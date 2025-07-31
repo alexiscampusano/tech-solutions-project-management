@@ -40,7 +40,11 @@
                             </a>
                         </div>
                     </div>
-                    <div class="hidden md:flex md:items-center md:ml-6">
+                    <div class="hidden md:flex md:items-center md:ml-6 space-x-4">
+                        <!-- Widget UF -->
+                        <div class="relative">
+                            <div id="uf-component"></div>
+                        </div>
                         <!-- Botones o links adicionales a la derecha si son necesarios -->
                     </div>
                 </div>
