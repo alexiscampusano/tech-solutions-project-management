@@ -19,12 +19,14 @@ final class Proyecto extends Model
         'fecha_inicio',
         'estado',
         'responsable',
-        'monto'
+        'monto',
+        'created_by'
     ];
 
     protected $casts = [
         'fecha_inicio' => 'date',
         'monto' => 'decimal:2',
+        'created_by' => 'integer',
     ];
 
     public const ESTADOS = [
@@ -35,7 +37,7 @@ final class Proyecto extends Model
     ];
 
     /**
-     * Obtener el estado formateado para mostrar
+     * Get formatted state for display
      */
     public function getEstadoFormateadoAttribute(): string
     {
@@ -43,7 +45,7 @@ final class Proyecto extends Model
     }
 
     /**
-     * Obtener el monto formateado para mostrar
+     * Get formatted amount for display
      */
     public function getMontoFormateadoAttribute(): string
     {
@@ -51,7 +53,7 @@ final class Proyecto extends Model
     }
 
     /**
-     * Obtener la fecha de inicio formateada en español
+     * Get formatted start date in Spanish
      */
     public function getFechaInicioFormateadaAttribute(): string
     {
@@ -59,7 +61,7 @@ final class Proyecto extends Model
     }
 
     /**
-     * Obtener la fecha de creación formateada en español
+     * Get formatted creation date in Spanish
      */
     public function getFechaCreacionFormateadaAttribute(): string
     {
@@ -67,7 +69,7 @@ final class Proyecto extends Model
     }
 
     /**
-     * Obtener la fecha de creación relativa en español
+     * Get relative creation date in Spanish
      */
     public function getFechaCreacionRelativaAttribute(): string
     {
@@ -75,7 +77,7 @@ final class Proyecto extends Model
     }
 
     /**
-     * Obtener la fecha de actualización formateada en español
+     * Get formatted update date in Spanish
      */
     public function getFechaActualizacionFormateadaAttribute(): string
     {
@@ -83,7 +85,7 @@ final class Proyecto extends Model
     }
 
     /**
-     * Obtener la fecha de actualización relativa en español
+     * Get relative update date in Spanish
      */
     public function getFechaActualizacionRelativaAttribute(): string
     {
@@ -91,7 +93,7 @@ final class Proyecto extends Model
     }
 
     /**
-     * Scope para filtrar por estado
+     * Scope to filter by state
      */
     public function scopePorEstado($query, string $estado)
     {
@@ -99,10 +101,18 @@ final class Proyecto extends Model
     }
 
     /**
-     * Scope para proyectos activos (no cancelados)
+     * Scope to filter active projects (not canceled)
      */
     public function scopeActivos($query)
     {
         return $query->where('estado', '!=', 'cancelado');
+    }
+
+    /**
+     * Relation: Project belongs to a User (creator)
+     */
+    public function creador()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

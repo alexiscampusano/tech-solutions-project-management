@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Services\UfService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -16,7 +17,7 @@ final class UfController extends Controller
     ) {}
 
     /**
-     * Obtener el valor actual de la UF
+     * Get current UF value
      */
     public function getValorActual(): JsonResponse
     {
@@ -30,7 +31,7 @@ final class UfController extends Controller
     }
 
     /**
-     * Obtener valor de UF por fecha específica
+     * Get UF value by specific date
      */
     public function getValorPorFecha(Request $request): JsonResponse
     {
@@ -49,7 +50,7 @@ final class UfController extends Controller
     }
 
     /**
-     * Convertir monto en pesos a UF
+     * Convert pesos to UF
      */
     public function convertirPesosAUf(Request $request): JsonResponse
     {
@@ -67,7 +68,7 @@ final class UfController extends Controller
     }
 
     /**
-     * Limpiar cache de UF
+     * Clean UF cache
      */
     public function limpiarCache(): JsonResponse
     {
@@ -81,7 +82,7 @@ final class UfController extends Controller
     }
 
     /**
-     * Obtener estado del cache
+     * Get UF cache status
      */
     public function estadoCache(): JsonResponse
     {

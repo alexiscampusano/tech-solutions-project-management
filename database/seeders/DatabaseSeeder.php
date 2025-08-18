@@ -11,14 +11,36 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        \App\Models\User::factory()->create([
+            'name' => 'Juan Pérez',
+            'email' => 'juan.perez@empresa.com',
+            'password' => bcrypt('password123'),
+        ]);
 
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        \App\Models\User::factory()->create([
+            'name' => 'María García',
+            'email' => 'maria.garcia@empresa.com',
+            'password' => bcrypt('password123'),
+        ]);
+
+        \App\Models\User::factory()->create([
+            'name' => 'Carlos López',
+            'email' => 'carlos.lopez@empresa.com',
+            'password' => bcrypt('password123'),
+        ]);
+
+        \App\Models\User::factory()->create([
+            'name' => 'Ana Rodríguez',
+            'email' => 'ana.rodriguez@empresa.com',
+            'password' => bcrypt('password123'),
+        ]);
+
+        \App\Models\User::factory()->create([
+            'name' => 'Luis Martínez',
+            'email' => 'luis.martinez@empresa.com',
+            'password' => bcrypt('password123'),
+        ]);
         
-        // Ejecutar el seeder de proyectos
         $this->call(ProyectoSeeder::class);
     }
 }

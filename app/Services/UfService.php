@@ -13,21 +13,19 @@ final class UfService
 {
     private const UF_API_URL = 'https://mindicador.cl/api/uf';
     private const CACHE_KEY = 'uf_valor_actual';
-    private const CACHE_DURATION = 3600; // 1 hora en segundos
+    private const CACHE_DURATION = 3600; 
 
     /**
-     * Obtener el valor actual de la UF
+     * Get current UF value
      */
     public function getValorActual(): array
     {
         try {
-            // Intentar obtener desde cache primero
             $cachedValue = Cache::get(self::CACHE_KEY);
             if ($cachedValue) {
                 return $cachedValue;
             }
 
-            // Si no hay cache, hacer petición a la API
             $response = Http::timeout(10)->get(self::UF_API_URL);
 
             if (!$response->successful()) {
@@ -45,7 +43,6 @@ final class UfService
                 return $this->getDefaultResponse();
             }
 
-            // Obtener el valor más reciente
             $ultimoValor = $data['serie'][0];
             
             $resultado = [
@@ -58,7 +55,6 @@ final class UfService
                 'cache' => false
             ];
 
-            // Guardar en cache
             Cache::put(self::CACHE_KEY, $resultado, self::CACHE_DURATION);
 
             Log::info('Valor UF obtenido exitosamente', [
@@ -79,7 +75,7 @@ final class UfService
     }
 
     /**
-     * Obtener el valor de la UF para una fecha específica
+     * Get UF value by specific date
      */
     public function getValorPorFecha(Carbon $fecha): array
     {
@@ -122,7 +118,7 @@ final class UfService
     }
 
     /**
-     * Convertir monto en pesos a UF
+     * Convert pesos to UF
      */
     public function convertirPesosAUf(float $montoPesos): array
     {
@@ -147,7 +143,7 @@ final class UfService
     }
 
     /**
-     * Limpiar cache de UF
+     * Clean UF cache
      */
     public function limpiarCache(): bool
     {
@@ -155,7 +151,7 @@ final class UfService
     }
 
     /**
-     * Verificar si hay datos en cache
+     * Check if there are data in cache
      */
     public function tieneDatosEnCache(): bool
     {
@@ -163,7 +159,7 @@ final class UfService
     }
 
     /**
-     * Respuesta por defecto cuando hay errores
+     * Default response when there are errors
      */
     private function getDefaultResponse(): array
     {

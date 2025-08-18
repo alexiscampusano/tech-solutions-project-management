@@ -1,93 +1,114 @@
 # Project Management System - Tech Solutions
 
-This is a comprehensive project management system built with Laravel, Docker, and Vite. It allows users to perform CRUD operations on projects, features robust error handling, and includes real-time UF (Chilean Unidad de Fomento) value integration via an external API.
+A comprehensive project management system built with Laravel, JWT authentication, and a modern API-First architecture. This application provides secure user authentication, project CRUD operations with authorization controls, and real-time UF (Chilean Unidad de Fomento) integration.
 
-## Features
+## ✨ Features
 
--   **Dockerized Environment**: The entire application stack (PHP, Apache, MySQL) runs in Docker containers.
--   **RESTful API**: Complete API endpoints for managing projects (`/api/proyectos`) with robust error handling.
--   **Web Interface**: Modern web views for creating, reading, updating, and deleting projects.
--   **External API Integration**: A reusable component that fetches and displays the daily value of the Chilean UF from an external service.
--   **Modern Frontend Workflow**: Uses Vite for fast and efficient asset compilation.
--   **Professional Error Handling**: Consistent error responses with appropriate HTTP status codes.
--   **Sample Data**: Pre-populated with realistic project data for testing and demonstration.
+### 🔐 **Authentication & Security**
+- **JWT Authentication**: Secure token-based authentication system
+- **User Registration & Login**: Complete authentication flow with encrypted passwords
+- **Protected Routes**: API endpoints secured with JWT middleware
+- **Authorization Controls**: Users can only edit/delete their own projects
 
-## Technologies Used
+### 📊 **Project Management**
+- **Complete CRUD Operations**: Create, read, update, and delete projects
+- **Owner-based Permissions**: Projects can only be modified by their creators
+- **Project States Management**: Predefined states (Iniciado, En Progreso, Completado, Cancelado)
+- **Responsive Web Interface**: Modern UI with Tailwind CSS
 
--   **Backend**: PHP 8.2, Laravel 11
--   **Frontend**: JavaScript, Alpine.js, Tailwind CSS
--   **Database**: MySQL 8.0
--   **Web Server**: Apache
--   **Containerization**: Docker & Docker Compose
--   **Development Tooling**: Vite
--   **External APIs**: mindicador.cl (UF values)
+### 🏗️ **API-First Architecture**
+- **RESTful API**: Clean, consistent API endpoints following REST principles
+- **Standardized Responses**: Uniform JSON response format across all endpoints
+- **Service Layer**: Business logic separated from controllers for maintainability
+- **Error Handling**: Comprehensive error handling with appropriate HTTP status codes
+
+### 💰 **UF Integration**
+- **Real-time UF Values**: Integration with mindicador.cl API
+- **Currency Conversion**: Convert Chilean pesos to UF
+- **Historical Data**: Query UF values by specific dates
+- **Smart Caching**: Optimized performance with intelligent cache management
+
+### 🎨 **Modern Frontend**
+- **Tailwind CSS**: Beautiful, responsive design
+- **Alpine.js**: Reactive components for enhanced UX
+- **Vite**: Fast development and optimized builds
+- **Real-time Updates**: Dynamic content loading without page refreshes
+
+## 🛠️ Technologies Used
+
+- **Backend**: PHP 8.2, Laravel 11, JWT Auth
+- **Frontend**: JavaScript, Alpine.js, Tailwind CSS
+- **Database**: MySQL 8.0
+- **Authentication**: JWT (JSON Web Tokens)
+- **Containerization**: Docker & Docker Compose
+- **Development**: Vite, Hot Module Replacement
+- **External APIs**: mindicador.cl (UF values)
 
 ---
 
 ## 🚀 Getting Started
 
-Follow these instructions to get the project up and running on your local machine.
-
 ### Prerequisites
 
--   [Docker](https://www.docker.com/get-started) installed and running.
--   [Docker Compose](https://docs.docker.com/compose/install/) installed.
--   A command-line interface (Terminal, PowerShell, etc.).
+- [Docker](https://www.docker.com/get-started) installed and running
+- [Docker Compose](https://docs.docker.com/compose/install/) installed
+- Command-line interface (Terminal, PowerShell, etc.)
 
 ### Installation Steps
 
 **1. Clone the Repository**
-
-First, clone this repository to your local machine.
 
 ```bash
 git clone https://github.com/alexiscampusano/tech-solutions-project-management
 cd tech-solutions-project-management
 ```
 
-**2. Create the Environment File**
-
-The project uses an `.env` file for all environment variables. An example file is provided, which you need to copy.
+**2. Create Environment File**
 
 ```bash
 cp .env.example .env
 ```
 
-**3. Generate the Application Key**
+**3. Configure Environment Variables**
 
-Laravel requires a unique application key for security. Run the following command to generate it. The command runs `php artisan key:generate` inside a temporary Docker container.
+Update the `.env` file with the following database configuration:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=desarrollo_software_1
+DB_USERNAME=root
+DB_PASSWORD=desarrollo_software_1
+```
+
+**4. Generate Application Key**
 
 ```bash
 docker-compose run --rm app php artisan key:generate
 ```
-_This command will automatically update the `APP_KEY` variable in your `.env` file._
 
-**4. Build and Start the Docker Containers**
+**5. Generate JWT Secret**
 
-This command will build the Docker images and start all the necessary services (app, database, phpmyadmin) in the background.
+```bash
+docker-compose run --rm app php artisan jwt:secret
+```
+
+**6. Build and Start Docker Containers**
 
 ```bash
 docker-compose up -d --build
 ```
--   `app`: The Laravel application running on Apache.
--   `db`: The MySQL database.
--   `phpmyadmin`: A web interface to manage the database.
 
-**5. Run Database Migrations and Seeders**
-
-With the containers running, you need to set up the database schema and populate it with initial data.
+**7. Run Database Migrations and Seeders**
 
 ```bash
 docker-compose exec app php artisan migrate:fresh --seed
 ```
--   `migrate:fresh`: Drops all existing tables and re-runs all migrations.
--   `--seed`: Runs the database seeders to populate the tables with test data.
 
-**6. Start the Vite Development Server**
+**8. Start Vite Development Server**
 
-This is a **critical step** for the frontend. This command compiles the JavaScript and CSS assets and keeps watching for changes.
-
-**You must run this in a separate terminal window and keep it running while you are developing.**
+**Critical step for frontend development:**
 
 ```bash
 docker-compose exec app npm run dev
@@ -95,135 +116,354 @@ docker-compose exec app npm run dev
 
 ---
 
-## ✅ Accessing the Application
+## 🌐 Accessing the Application
 
-Once all the steps are completed, you can access the different parts of the application:
+- **🏠 Main Application**: [http://localhost:8000](http://localhost:8000)
+- **🗃️ phpMyAdmin**: [http://localhost:8080](http://localhost:8080)
+  - **Server**: `db`
+  - **Username**: `root`
+  - **Password**: `desarrollo_software_1`
+- **⚡ Vite Dev Server**: Typically running on `http://localhost:5173`
 
--   **🌐 Main Application**: [http://localhost:8000](http://localhost:8000)
--   **🗃️ Database (phpMyAdmin)**: [http://localhost:8080](http://localhost:8080)
-    -   **Server**: `db`
-    -   **Username**: `laraveluser`
-    -   **Password**: `secret`
+## 👥 Sample Users
 
--   **⚡ Vite Dev Server**: Running in your terminal, typically on `http://localhost:5173`.
+The application comes with pre-configured test users:
 
-## Sample Data
+```
+📧 Email: juan.perez@empresa.com
+🔑 Password: password123
 
-The application comes pre-populated with 8 realistic project examples:
-- Sistema de Gestión de Inventario (In Progress)
-- Aplicación Móvil de Ventas (Completed)
-- Portal Web Corporativo (Started)
-- Sistema de Facturación Electrónica (Completed)
-- Plataforma de E-learning (In Progress)
-- API de Integración CRM (Started)
-- Sistema de Monitoreo IoT (Cancelled)
-- Dashboard Ejecutivo BI (In Progress)
-
-Each project includes realistic data like amounts, responsible persons, dates, and different states.
-
-## API Endpoints
-
-The application exposes comprehensive API endpoints under the `/api` prefix:
-
-### Projects
--   `GET /api/proyectos`: List all projects.
--   `POST /api/proyectos`: Create a new project.
--   `GET /api/proyectos/{id}`: Get a single project.
--   `PUT /api/proyectos/{id}`: Update a project.
--   `DELETE /api/proyectos/{id}`: Delete a project.
--   `GET /api/proyectos-estados`: Get available project states.
-
-### UF (Unidad de Fomento) Service
--   `GET /api/uf`: Get the current UF value.
--   `GET /api/uf/fecha/{date}`: Get UF value for a specific date.
--   `POST /api/uf/convertir`: Convert pesos to UF (JSON body: `{"monto": 50000}`).
--   `DELETE /api/uf/cache`: Clear UF cache.
--   `GET /api/uf/cache`: Check cache status.
-
-## Error Handling
-
-The API includes comprehensive error handling with consistent response formats:
-
-### Error Response Format
-```json
-{
-  "success": false,
-  "error": {
-    "code": "ERROR_CODE",
-    "message": "Human-readable error message",
-    "details": {
-      // Additional error information
-    }
-  }
-}
+📧 Email: maria.gonzalez@empresa.com  
+🔑 Password: password123
 ```
 
-### Error Types Handled
-- **404**: Resource not found (`PROYECTO_NOT_FOUND`, `ROUTE_NOT_FOUND`)
-- **405**: Method not allowed (`METHOD_NOT_ALLOWED`)
-- **422**: Validation errors (`VALIDATION_ERROR`)
-- **500**: Database and internal server errors (`DATABASE_ERROR`, `INTERNAL_ERROR`)
+## 📋 Sample Projects
 
-## Testing the API
+Pre-populated with realistic project data:
+- Sistema de Gestión de Inventario (En Progreso)
+- Plataforma E-commerce (Iniciado)
+- Portal Web Corporativo (Completado)
+- Sistema de Facturación (Cancelado)
 
-You can test the API using curl commands:
+---
+
+## 🔌 API Documentation
+
+### 🔐 Authentication Endpoints
+
+#### Public Routes (No Authentication Required)
+```bash
+POST /api/auth/register    # Register new user
+POST /api/auth/login       # User login
+```
+
+#### Protected Routes (JWT Required)
+```bash
+POST /api/auth/logout      # Logout user
+GET  /api/auth/me          # Get authenticated user data
+POST /api/auth/refresh     # Refresh JWT token
+```
+
+### 📊 Project Management Endpoints
+
+#### Public Routes
+```bash
+GET /api/proyectos         # List all projects
+GET /api/proyectos/{id}    # Get specific project
+GET /api/proyectos/estados # Get available project states
+```
+
+#### Protected Routes (JWT Required)
+```bash
+POST   /api/proyectos      # Create new project
+PUT    /api/proyectos/{id} # Update project (owners only)
+DELETE /api/proyectos/{id} # Delete project (owners only)
+```
+
+### 💰 UF (Unidad de Fomento) Endpoints
 
 ```bash
-# Get all projects
+GET    /api/uf             # Get current UF value
+GET    /api/uf/date        # Get UF value by date (?fecha=2025-01-01)
+POST   /api/uf/convert     # Convert pesos to UF
+DELETE /api/uf/cache       # Clear UF cache
+GET    /api/uf/cache       # Get cache status
+```
+
+---
+
+## 🧪 Testing the API
+
+### Authentication Flow
+
+**1. Register a New User**
+```bash
+curl -X POST http://localhost:8000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Test User",
+    "email": "test@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
+  }'
+```
+
+**2. Login**
+```bash
+curl -X POST http://localhost:8000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "test@example.com",
+    "password": "password123"
+  }'
+```
+
+**3. Use JWT Token for Protected Routes**
+```bash
+# Replace YOUR_JWT_TOKEN with the token from login response
+curl -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+     -H "Accept: application/json" \
+     http://localhost:8000/api/auth/me
+```
+
+### Project Management
+
+**Get All Projects**
+```bash
 curl -H "Accept: application/json" http://localhost:8000/api/proyectos
+```
 
-# Get a specific project
-curl -H "Accept: application/json" http://localhost:8000/api/proyectos/1
+**Create New Project (Requires Authentication)**
+```bash
+curl -X POST http://localhost:8000/api/proyectos \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nombre": "Mi Nuevo Proyecto",
+    "fecha_inicio": "2025-01-15",
+    "estado": "iniciado",
+    "responsable": "Juan Pérez",
+    "monto": 1500000
+  }'
+```
 
-# Test error handling (non-existent project)
-curl -H "Accept: application/json" http://localhost:8000/api/proyectos/999
+### UF Integration
 
-# Create a new project
-curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" \
-  -d '{"nombre":"Test Project","fecha_inicio":"2025-08-01","estado":"iniciado","responsable":"Test User","monto":1000000}' \
-  http://localhost:8000/api/proyectos
-
-# Get current UF value
+**Get Current UF Value**
+```bash
 curl -H "Accept: application/json" http://localhost:8000/api/uf
 ```
 
+**Convert Pesos to UF**
+```bash
+curl -X POST http://localhost:8000/api/uf/convert \
+  -H "Content-Type: application/json" \
+  -d '{"monto": 1000000}'
+```
+
 ---
 
-## Troubleshooting
+## 🎨 Frontend Features
 
--   **`net::ERR_CONNECTION_REFUSED` in the browser console:** This usually means the Vite development server (`npm run dev`) is not running. Make sure to run it in a separate terminal.
--   **Changes in `.js` or `.css` files not appearing:** Ensure the Vite server is running. If it is, try restarting it.
--   **Database Errors:** If you encounter database errors, running `docker-compose exec app php artisan migrate:fresh --seed` can often resolve issues by resetting the database to a clean state.
--   **UF Widget not appearing:** Make sure both `docker-compose up -d` and `npm run dev` are running. The widget requires compiled JavaScript assets.
--   **API returns HTML instead of JSON:** Ensure you're accessing `/api/*` routes and not web routes. API routes always return JSON.
+### User Authentication
+- **Login Page**: `/login` - User authentication with JWT
+- **Register Page**: `/register` - New user registration
+- **Auto-redirect**: Automatic redirection based on authentication status
 
-## Project Structure
+### Project Management
+- **Dashboard**: `/proyectos` - List all projects with search and filters
+- **Create Project**: `/proyectos/create` - Form to create new projects
+- **View Details**: `/proyectos/{id}` - Detailed project information
+- **Edit Project**: `/proyectos/{id}/edit` - Edit form (owners only)
+
+### UF Widget
+- **Real-time Display**: Current UF value in navigation
+- **Currency Converter**: Convert pesos to UF interactively
+- **Auto-refresh**: Periodic updates of UF values
+
+---
+
+## 🔒 Security Features
+
+### JWT Authentication
+- **Token-based Security**: Stateless authentication using JWT
+- **Token Expiration**: Configurable token lifetime (default: 60 minutes)
+- **Refresh Mechanism**: Automatic token refresh for extended sessions
+- **Secure Logout**: Token invalidation on logout
+
+### Authorization
+- **Role-based Access**: Users can only modify their own projects
+- **Protected Endpoints**: API routes secured with JWT middleware
+- **Input Validation**: Comprehensive request validation
+- **Password Hashing**: Secure password storage using bcrypt
+
+### Error Handling
+```json
+{
+  "success": false,
+  "message": "Error description",
+  "error": "Technical details"
+}
+```
+
+---
+
+## 📁 Project Structure
 
 ```
 ├── app/
-│   ├── Exceptions/          # Custom exception classes
-│   ├── Http/Controllers/    # API and web controllers
-│   ├── Models/             # Eloquent models
-│   └── Services/           # Business logic services
+│   ├── Http/
+│   │   ├── Controllers/Api/     # API controllers (JWT protected)
+│   │   ├── Requests/           # Form request validation
+│   │   └── Middleware/         # Custom middleware
+│   ├── Models/                 # Eloquent models
+│   └── Services/              # Business logic layer
 ├── database/
-│   ├── migrations/         # Database schema definitions
-│   └── seeders/           # Sample data seeders
+│   ├── migrations/            # Database schema
+│   └── seeders/              # Sample data
 ├── resources/
-│   ├── js/                # Frontend JavaScript components
-│   ├── views/             # Blade templates
-│   └── css/               # Stylesheets
+│   ├── js/                   # Frontend JavaScript
+│   ├── views/               # Blade templates
+│   │   ├── auth/           # Authentication views
+│   │   └── proyectos/      # Project management views
+│   └── css/                # Stylesheets
 ├── routes/
-│   ├── api.php            # API routes
-│   └── web.php            # Web routes
-└── docker-compose.yml     # Docker services configuration
+│   ├── api.php             # API routes (JWT protected)
+│   └── web.php             # Web routes
+└── config/
+    └── jwt.php             # JWT configuration
 ```
 
 ---
 
-## Development Notes
+## 🐛 Troubleshooting
 
-- The application follows Laravel's MVC pattern with additional service layer for business logic.
-- API responses are consistent and follow REST principles.
-- Error handling is comprehensive and developer-friendly.
-- The UF component is reusable and can be easily integrated into other parts of the application.
-- All database operations are wrapped in proper transaction handling.
+### Common Issues
+
+**Authentication Issues**
+- Ensure JWT secret is generated: `php artisan jwt:secret`
+- Check token expiration in browser's localStorage
+- Verify `Authorization: Bearer <token>` header format
+
+**Database Connection**
+- Confirm database credentials in `.env` file
+- Ensure Docker containers are running: `docker-compose ps`
+- Reset database if needed: `php artisan migrate:fresh --seed`
+
+**Frontend Issues**
+- Vite server must be running: `npm run dev`
+- Check browser console for JavaScript errors
+- Clear browser cache if assets aren't updating
+
+**UF Widget Not Working**
+- Verify internet connection for external API calls
+- Check API cache status: `GET /api/uf/cache`
+- Clear UF cache if stale: `DELETE /api/uf/cache`
+
+### Development Tips
+
+**JWT Debugging**
+```bash
+# Check if JWT is working
+curl -H "Authorization: Bearer <token>" http://localhost:8000/api/auth/me
+
+# Refresh expired token
+curl -X POST -H "Authorization: Bearer <token>" http://localhost:8000/api/auth/refresh
+```
+
+**Database Reset**
+```bash
+# Complete database reset with fresh data
+docker-compose exec app php artisan migrate:fresh --seed
+```
+
+---
+
+## 🎯 Architecture Highlights
+
+### API-First Design
+- **Decoupled Frontend/Backend**: Complete separation for scalability
+- **Consistent JSON Responses**: Standardized format across all endpoints
+- **RESTful Conventions**: Proper HTTP methods and status codes
+- **Service Layer**: Business logic abstracted from controllers
+
+### Modern Development Practices
+- **Clean Code**: Well-organized, documented, and maintainable
+- **Error Handling**: Comprehensive exception management
+- **Security First**: JWT authentication and authorization controls
+- **Performance Optimized**: Caching, eager loading, and efficient queries
+
+### Scalability Ready
+- **Microservice Friendly**: API can serve multiple frontend applications
+- **Docker Containerized**: Easy deployment and scaling
+- **Environment Configured**: Separate configurations for different environments
+- **Database Optimized**: Proper indexes and relationships
+
+---
+
+## 📊 Response Format Standards
+
+### Success Response
+```json
+{
+  "success": true,
+  "data": {
+    // Response data
+  },
+  "message": "Operation completed successfully"
+}
+```
+
+### Error Response
+```json
+{
+  "success": false,
+  "message": "Error description",
+  "error": "Technical error details"
+}
+```
+
+### Authentication Response
+```json
+{
+  "success": true,
+  "data": {
+    "user": {
+      "id": 1,
+      "name": "User Name",
+      "email": "user@example.com"
+    },
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+    "token_type": "bearer",
+    "expires_in": 3600
+  },
+  "message": "Login successful"
+}
+```
+
+---
+
+## 🔄 Development Workflow
+
+1. **Start Development Environment**
+   ```bash
+   docker-compose up -d
+   docker-compose exec app npm run dev
+   ```
+
+2. **Make Changes**
+   - Backend: Controllers, Models, Services in `app/`
+   - Frontend: JavaScript/CSS in `resources/`
+   - Database: Migrations in `database/migrations/`
+
+3. **Test Changes**
+   - API: Use curl or Postman for endpoint testing
+   - Frontend: Browser testing with hot reload
+   - Database: phpMyAdmin for data inspection
+
+4. **Commit Changes**
+   ```bash
+   git add .
+   git commit -m "feat: description of changes"
+   ```
+

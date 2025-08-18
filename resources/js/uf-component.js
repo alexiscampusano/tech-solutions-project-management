@@ -1,6 +1,6 @@
 /**
- * Componente UF - Muestra el valor actual de la Unidad de Fomento
- * Componente reutilizable que consume la API de UF
+ * UF Component - Displays the current UF value
+ * Reusable component that consumes the UF API
  */
 class UfComponent {
     constructor(containerId, options = {}) {
@@ -8,7 +8,7 @@ class UfComponent {
         this.options = {
             showDate: true,
             autoRefresh: true,
-            refreshInterval: 300000, // 5 minutos
+            refreshInterval: 300000,
             showConverter: false,
             apiBaseUrl: '/api/uf',
             ...options
@@ -25,9 +25,6 @@ class UfComponent {
         this.init();
     }
 
-    /**
-     * Inicializar el componente
-     */
     async init() {
         this.render();
         await this.loadUfValue();
@@ -38,7 +35,7 @@ class UfComponent {
     }
 
     /**
-     * Cargar el valor actual de la UF desde la API
+     * Load the current UF value from the API
      */
     async loadUfValue() {
         try {
@@ -62,11 +59,11 @@ class UfComponent {
     }
 
     /**
-     * Convertir monto en pesos a UF
+     * Convert pesos to UF
      */
     async convertirPesosAUf(monto) {
         try {
-            const response = await fetch(`${this.options.apiBaseUrl}/convertir`, {
+            const response = await fetch(`${this.options.apiBaseUrl}/convert`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -84,7 +81,7 @@ class UfComponent {
     }
 
     /**
-     * Renderizar el componente
+     * Render the component
      */
     render() {
         if (!this.container) return;
@@ -153,7 +150,7 @@ class UfComponent {
     }
 
     /**
-     * Renderizar el convertidor de UF
+     * Render the UF converter
      */
     renderConverter() {
         return `
@@ -175,7 +172,7 @@ class UfComponent {
     }
 
     /**
-     * Obtener display del valor
+     * Get the value display
      */
     getValueDisplay() {
         if (!this.data) return '---';
@@ -184,7 +181,7 @@ class UfComponent {
     }
 
     /**
-     * Obtener display de la fecha
+     * Get the date display
      */
     getDateDisplay() {
         if (!this.data || !this.data.fecha_formateada) return '---';
@@ -192,28 +189,24 @@ class UfComponent {
     }
 
     /**
-     * Adjuntar event listeners
+     * Attach event listeners
      */
     attachEventListeners() {
-        // Botón de refresh
         const refreshBtn = document.getElementById('uf-refresh');
         if (refreshBtn) {
             refreshBtn.addEventListener('click', () => this.loadUfValue());
         }
 
-        // Botón del convertidor
         const converterBtn = document.getElementById('uf-converter');
         if (converterBtn) {
             converterBtn.addEventListener('click', () => this.toggleConverter());
         }
 
-        // Convertir monto
         const convertBtn = document.getElementById('uf-converter-btn');
         if (convertBtn) {
             convertBtn.addEventListener('click', () => this.handleConversion());
         }
 
-        // Enter en el input del convertidor
         const converterInput = document.getElementById('uf-converter-input');
         if (converterInput) {
             converterInput.addEventListener('keypress', (e) => {
@@ -224,15 +217,9 @@ class UfComponent {
         }
     }
 
-    /**
-     * Toggle del panel convertidor
-     */
-    toggleConverter() {
-        // Este método ya no es necesario, el panel se controla con Alpine.js
-    }
 
     /**
-     * Manejar conversión
+     * Handle conversion
      */
     async handleConversion() {
         const input = document.getElementById('uf-converter-input');
@@ -265,7 +252,7 @@ class UfComponent {
     }
 
     /**
-     * Mostrar estado de carga
+     * Show loading state
      */
     setLoading(loading) {
         const loadingEl = document.getElementById('uf-loading-spinner');
@@ -275,7 +262,7 @@ class UfComponent {
     }
 
     /**
-     * Mostrar error
+     * Show error
      */
     showError(message) {
         const errorEl = document.getElementById('uf-error');
@@ -290,7 +277,7 @@ class UfComponent {
     }
 
     /**
-     * Iniciar actualización automática
+     * Start automatic refresh
      */
     startAutoRefresh() {
         this.refreshTimer = setInterval(() => {
@@ -299,7 +286,7 @@ class UfComponent {
     }
 
     /**
-     * Detener actualización automática
+     * Stop automatic refresh
      */
     stopAutoRefresh() {
         if (this.refreshTimer) {
@@ -309,7 +296,7 @@ class UfComponent {
     }
 
     /**
-     * Destruir el componente
+     * Destroy the component
      */
     destroy() {
         this.stopAutoRefresh();
@@ -319,14 +306,11 @@ class UfComponent {
     }
 }
 
-// Exportar el componente para uso global
 window.UfComponent = UfComponent;
 
-// Auto-inicialización si existe el contenedor
 document.addEventListener('DOMContentLoaded', function() {
     const ufContainer = document.getElementById('uf-component');
     if (ufContainer) {
-        // Necesitamos esperar a que Alpine.js esté listo
         setTimeout(() => {
             window.ufWidget = new UfComponent('uf-component', {
                 showDate: true,

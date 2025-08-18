@@ -1,17 +1,45 @@
 <?php
 
-use App\Http\Controllers\ProyectoController;
 use Illuminate\Support\Facades\Route;
 
-// Ruta principal
+// Main route
 Route::get('/', function () {
     return redirect()->route('proyectos.index');
 });
 
-// Rutas web para gestión de proyectos con vistas
-Route::resource('proyectos', ProyectoController::class);
+// Authentication routes (only views)
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login');
 
-// Ruta alternativa para el dashboard
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('register');
+
+// ===== WEB ROUTES (Only views - API-First Architecture) =====
+// All CRUD operations use the API via JavaScript
+
+// Project list
+Route::get('/proyectos', function () {
+    return view('proyectos.index');
+})->name('proyectos.index');
+
+// Create project form
+Route::get('/proyectos/create', function () {
+    return view('proyectos.create');
+})->name('proyectos.create');
+
+// View project details
+Route::get('/proyectos/{id}', function ($id) {
+    return view('proyectos.show', ['proyectoId' => $id]);
+})->name('proyectos.show');
+
+// Edit project form  
+Route::get('/proyectos/{id}/edit', function ($id) {
+    return view('proyectos.edit', ['proyectoId' => $id]);
+})->name('proyectos.edit');
+
+// Alternative route for the dashboard
 Route::get('/dashboard', function () {
     return redirect()->route('proyectos.index');
 })->name('dashboard');

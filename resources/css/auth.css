@@ -1,0 +1,39 @@
+/**
+ * Styles for authentication system
+ * Handles the transition without flash between guest/user states
+ */
+
+/* ===== INITIAL AUTH STATES ===== */
+
+/* Hide everything initially */
+#auth-loading { 
+    display: flex; 
+}
+
+#guest-links { 
+    display: none; 
+}
+
+#user-menu { 
+    display: none; 
+}
+
+/* ===== SHOW ACCORDING TO INITIAL STATE DETECTED ===== */
+
+/* When the initial state is USER (logged in) */
+[style*="--auth-initial-state: user"] #auth-loading { 
+    display: none; 
+}
+
+[style*="--auth-initial-state: user"] #user-menu { 
+    display: flex; 
+}
+
+/* When the initial state is GUEST (not logged in) */
+[style*="--auth-initial-state: guest"] #auth-loading { 
+    display: none; 
+}
+
+[style*="--auth-initial-state: guest"] #guest-links { 
+    display: flex; 
+}

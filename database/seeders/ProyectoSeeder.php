@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Proyecto;
+use App\Models\User;
 use Carbon\Carbon;
 
 class ProyectoSeeder extends Seeder
@@ -14,6 +15,12 @@ class ProyectoSeeder extends Seeder
      */
     public function run(): void
     {
+        $usuarios = User::all();
+        
+        if ($usuarios->isEmpty()) {
+            throw new \Exception('No hay usuarios disponibles. Asegúrate de que el DatabaseSeeder cree usuarios primero.');
+        }
+
         $proyectos = [
             [
                 'nombre' => 'Sistema de Gestión de Inventario',
@@ -21,6 +28,7 @@ class ProyectoSeeder extends Seeder
                 'estado' => 'en_progreso',
                 'responsable' => 'Ana García',
                 'monto' => 2500000.00,
+                'created_by' => $usuarios->get(0)->id, 
             ],
             [
                 'nombre' => 'Aplicación Móvil de Ventas',
@@ -28,6 +36,7 @@ class ProyectoSeeder extends Seeder
                 'estado' => 'completado',
                 'responsable' => 'Carlos Rodriguez',
                 'monto' => 4800000.00,
+                'created_by' => $usuarios->get(1)->id, 
             ],
             [
                 'nombre' => 'Portal Web Corporativo',
@@ -35,6 +44,7 @@ class ProyectoSeeder extends Seeder
                 'estado' => 'iniciado',
                 'responsable' => 'María López',
                 'monto' => 3200000.00,
+                'created_by' => $usuarios->get(2)->id, 
             ],
             [
                 'nombre' => 'Sistema de Facturación Electrónica',
@@ -42,6 +52,7 @@ class ProyectoSeeder extends Seeder
                 'estado' => 'completado',
                 'responsable' => 'Pedro Martínez',
                 'monto' => 5600000.00,
+                'created_by' => $usuarios->get(0)->id, 
             ],
             [
                 'nombre' => 'Plataforma de E-learning',
@@ -49,6 +60,7 @@ class ProyectoSeeder extends Seeder
                 'estado' => 'en_progreso',
                 'responsable' => 'Laura Sánchez',
                 'monto' => 7200000.00,
+                'created_by' => $usuarios->get(3)->id, 
             ],
             [
                 'nombre' => 'API de Integración CRM',
@@ -56,6 +68,7 @@ class ProyectoSeeder extends Seeder
                 'estado' => 'iniciado',
                 'responsable' => 'Roberto Silva',
                 'monto' => 1800000.00,
+                'created_by' => $usuarios->get(4)->id, 
             ],
             [
                 'nombre' => 'Sistema de Monitoreo IoT',
@@ -63,6 +76,7 @@ class ProyectoSeeder extends Seeder
                 'estado' => 'cancelado',
                 'responsable' => 'Sofía Mendoza',
                 'monto' => 8900000.00,
+                'created_by' => $usuarios->get(1)->id, 
             ],
             [
                 'nombre' => 'Dashboard Ejecutivo BI',
@@ -70,6 +84,7 @@ class ProyectoSeeder extends Seeder
                 'estado' => 'en_progreso',
                 'responsable' => 'Diego Herrera',
                 'monto' => 4500000.00,
+                'created_by' => $usuarios->get(2)->id, 
             ]
         ];
 

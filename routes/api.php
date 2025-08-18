@@ -1,6 +1,8 @@
 <?php
 
-use App\Http\Controllers\ProyectoController;
+use App\Http\Controllers\Api\ProyectoController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\UfController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -8,53 +10,62 @@ use Illuminate\Support\Facades\Route;
 | API Routes
 |--------------------------------------------------------------------------
 |
-| Aquí puedes registrar las rutas de API para tu aplicación. Estas rutas
-| son cargadas por el RouteServiceProvider y todas serán asignadas al
-| grupo de middleware "api".
+| Here you can register the API routes for your application. These routes
+| are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "api" middleware group.
 |
 */
 
-// Rutas API para gestión de proyectos
-Route::prefix('proyectos')->name('api.proyectos.')->group(function () {
-    // GET /api/proyectos - Listar todos los proyectos
-    Route::get('/', [ProyectoController::class, 'index'])->name('index');
+// Authentication API routes (public - no middleware)
+Route::prefix('auth')->name('api.auth.')->group(function () {
+    // POST /api/auth/register - Register user
+    Route::post('/register', [AuthController::class, 'register'])->name('register');
     
-    // POST /api/proyectos - Crear un nuevo proyecto
-    Route::post('/', [ProyectoController::class, 'store'])->name('store');
-    
-    // GET /api/proyectos/{id} - Obtener un proyecto por ID
-    Route::get('/{id}', [ProyectoController::class, 'show'])->name('show');
-    
-    // PUT /api/proyectos/{id} - Actualizar un proyecto por ID
-    Route::put('/{id}', [ProyectoController::class, 'update'])->name('update');
-    
-    // DELETE /api/proyectos/{id} - Eliminar un proyecto por ID
-    Route::delete('/{id}', [ProyectoController::class, 'destroy'])->name('destroy');
+    // POST /api/auth/login - Login
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
 });
 
-// Ruta para obtener los estados disponibles
-Route::get('proyectos-estados', function () {
-    return response()->json([
-        'success' => true,
-        'data' => \App\Models\Proyecto::ESTADOS,
-        'message' => 'Estados disponibles para proyectos'
-    ]);
-})->name('api.proyectos.estados');
+// Authentication API routes (protected - with JWT middleware)
+Route::prefix('auth')->middleware('auth:api')->name('api.auth.')->group(function () {
+    // POST /api/auth/logout - Logout
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    
+    // GET /api/auth/me - Authenticated user data
+    Route::get('/me', [AuthController::class, 'me'])->name('me');
+    
+    // POST /api/auth/refresh - Refresh token
+    Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
+});
 
-// Rutas API para UF (Unidad de Fomento)
+// API routes for project management
+Route::prefix('proyectos')->name('api.proyectos.')->group(function () {
+    // Public routes (no authentication)
+    Route::get('/', [ProyectoController::class, 'index'])->name('index');
+    Route::get('/estados', [ProyectoController::class, 'estados'])->name('estados');
+    Route::get('/{id}', [ProyectoController::class, 'show'])->name('show');
+    
+    // Protected routes (require JWT)
+    Route::middleware('auth:api')->group(function () {
+        Route::post('/', [ProyectoController::class, 'store'])->name('store');
+        Route::put('/{id}', [ProyectoController::class, 'update'])->name('update');
+        Route::delete('/{id}', [ProyectoController::class, 'destroy'])->name('destroy');
+    });
+});
+
+// API routes for UF (Unidad de Fomento)
 Route::prefix('uf')->name('api.uf.')->group(function () {
-    // GET /api/uf - Obtener valor actual de la UF
-    Route::get('/', [\App\Http\Controllers\UfController::class, 'getValorActual'])->name('actual');
+    // GET /api/uf - Get current UF value
+    Route::get('/', [UfController::class, 'getValorActual'])->name('actual');
     
-    // GET /api/uf/fecha - Obtener valor de UF por fecha
-    Route::get('/fecha', [\App\Http\Controllers\UfController::class, 'getValorPorFecha'])->name('fecha');
+    // GET /api/uf/date - Get UF value by date
+    Route::get('/date', [UfController::class, 'getValorPorFecha'])->name('fecha');
     
-    // POST /api/uf/convertir - Convertir pesos a UF
-    Route::post('/convertir', [\App\Http\Controllers\UfController::class, 'convertirPesosAUf'])->name('convertir');
+    // POST /api/uf/convert - Convert pesos to UF
+    Route::post('/convert', [UfController::class, 'convertirPesosAUf'])->name('convertir');
     
-    // DELETE /api/uf/cache - Limpiar cache
-    Route::delete('/cache', [\App\Http\Controllers\UfController::class, 'limpiarCache'])->name('limpiar-cache');
+    // DELETE /api/uf/cache - Clear cache
+    Route::delete('/cache', [UfController::class, 'limpiarCache'])->name('limpiar-cache');
     
-    // GET /api/uf/cache - Estado del cache
-    Route::get('/cache', [\App\Http\Controllers\UfController::class, 'estadoCache'])->name('estado-cache');
+    // GET /api/uf/cache - Cache state
+    Route::get('/cache', [UfController::class, 'estadoCache'])->name('estado-cache');
 }); 
