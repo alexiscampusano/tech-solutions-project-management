@@ -9,8 +9,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
+use Illuminate\Auth\AuthenticationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -75,6 +77,10 @@ class Handler extends ExceptionHandler
             return $this->handleValidationException($exception);
         }
 
+        if ($exception instanceof AuthenticationException) {
+            return $this->handleAuthenticationException($exception);
+        }
+
         if ($exception instanceof ModelNotFoundException) {
             return $this->handleModelNotFoundException($exception);
         }
@@ -106,6 +112,23 @@ class Handler extends ExceptionHandler
                 ]
             ]
         ], 422);
+    }
+
+    /**
+     * Handle authentication exceptions
+     */
+    protected function handleAuthenticationException(AuthenticationException $exception): JsonResponse
+    {
+        return response()->json([
+            'success' => false,
+            'error' => [
+                'code' => 'AUTHENTICATION_REQUIRED',
+                'message' => 'Autenticación requerida. Proporcione un token JWT válido.',
+                'details' => [
+                    'hint' => 'Use el endpoint POST /api/auth/login para obtener un token'
+                ]
+            ]
+        ], Response::HTTP_UNAUTHORIZED);
     }
 
     /**

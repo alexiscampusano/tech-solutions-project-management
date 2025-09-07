@@ -119,7 +119,7 @@ docker-compose exec app npm run dev
 ## 🌐 Accessing the Application
 
 - **🏠 Main Application**: [http://localhost:8000](http://localhost:8000)
-- **🗃️ phpMyAdmin**: [http://localhost:8080](http://localhost:8080)
+- **🗃️ phpMyAdmin**: [http://localhost:8081](http://localhost:8081)
   - **Server**: `db`
   - **Username**: `root`
   - **Password**: `desarrollo_software_1`

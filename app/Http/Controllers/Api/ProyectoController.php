@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Rule;
 use App\Models\Proyecto;
+use Symfony\Component\HttpFoundation\Response;
 
 final class ProyectoController extends Controller
 {
@@ -20,7 +21,7 @@ final class ProyectoController extends Controller
     ) {}
 
     /**
-     * Display a listing of the resource.
+     * Get all projects
      */
     public function index(): JsonResponse
     {
@@ -31,19 +32,19 @@ final class ProyectoController extends Controller
                 'success' => true,
                 'data' => $proyectos,
                 'message' => 'Proyectos obtenidos exitosamente'
-            ]);
+            ], Response::HTTP_OK);
 
         } catch (DatabaseException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener los proyectos',
                 'error' => $e->getMessage()
-            ], 500);
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create a new project
      */
     public function store(Request $request): JsonResponse
     {
@@ -56,19 +57,19 @@ final class ProyectoController extends Controller
                 'success' => true,
                 'data' => $proyecto,
                 'message' => 'Proyecto creado exitosamente'
-            ], 201);
+            ], Response::HTTP_CREATED);
 
         } catch (DatabaseException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al crear el proyecto',
                 'error' => $e->getMessage()
-            ], 500);
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
-     * Display the specified resource.
+     * Get a single project by ID
      */
     public function show(string $id): JsonResponse
     {
@@ -79,19 +80,19 @@ final class ProyectoController extends Controller
                 'success' => true,
                 'data' => $proyecto,
                 'message' => 'Proyecto obtenido exitosamente'
-            ]);
+            ], Response::HTTP_OK);
 
         } catch (ProyectoNotFoundException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Proyecto no encontrado',
                 'error' => $e->getMessage()
-            ], 404);
+            ], Response::HTTP_NOT_FOUND);
         }
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update an existing project
      */
     public function update(Request $request, string $id): JsonResponse
     {
@@ -104,55 +105,52 @@ final class ProyectoController extends Controller
                 'success' => true,
                 'data' => $proyecto,
                 'message' => 'Proyecto actualizado exitosamente'
-            ]);
+            ], Response::HTTP_OK);
 
         } catch (ProyectoNotFoundException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Proyecto no encontrado',
                 'error' => $e->getMessage()
-            ], 404);
+            ], Response::HTTP_NOT_FOUND);
                 
         } catch (DatabaseException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al actualizar el proyecto',
                 'error' => $e->getMessage()
-            ], 500);
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete a project by ID
      */
     public function destroy(string $id): JsonResponse
     {
         try {
-            $nombreProyecto = $this->proyectoService->eliminar($id);
+            $this->proyectoService->eliminar($id);
 
-            return response()->json([
-                'success' => true,
-                'message' => "Proyecto '{$nombreProyecto}' eliminado exitosamente"
-            ]);
+            return response()->json([], Response::HTTP_NO_CONTENT);
 
         } catch (ProyectoNotFoundException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Proyecto no encontrado',
                 'error' => $e->getMessage()
-            ], 404);
+            ], Response::HTTP_NOT_FOUND);
                 
         } catch (DatabaseException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al eliminar el proyecto',
                 'error' => $e->getMessage()
-            ], 500);
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
-     * Obtener estados disponibles para proyectos
+     * Get available states for projects
      */
     public function estados(): JsonResponse
     {
@@ -163,19 +161,19 @@ final class ProyectoController extends Controller
                 'success' => true,
                 'data' => $estados,
                 'message' => 'Estados obtenidos exitosamente'
-            ]);
+            ], Response::HTTP_OK);
 
         } catch (DatabaseException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener los estados',
                 'error' => $e->getMessage()
-            ], 500);
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
-     * Validar datos del proyecto para API requests
+     * Validate project data for API requests
      */
     private function validarDatosProyecto(Request $request): array
     {
